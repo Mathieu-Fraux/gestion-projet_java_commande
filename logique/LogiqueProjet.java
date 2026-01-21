@@ -68,6 +68,14 @@ public class LogiqueProjet {
         return contraintes.removeIf(c -> c.getId() == id);
     }
 
+    public Contrainte trouverContrainteParId(int id) {
+        for (Contrainte c : contraintes) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
+    }
 
     //=======Gestion Rapport========
 
@@ -80,7 +88,7 @@ public class LogiqueProjet {
     }
 
     //===generation ID=====
-    // generation de l'id
+    // generation de l'id besoin
     public int genererProchainIdBesoin() {
         if (besoins.isEmpty()) {
             return 1;
@@ -93,5 +101,6 @@ public class LogiqueProjet {
             return 1;}
         return contraintes.get(contraintes.size() - 1).getId() + 1;
     }
+
 
 }

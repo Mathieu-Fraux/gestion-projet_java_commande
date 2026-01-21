@@ -19,6 +19,12 @@ public class Rapport {
         this.participant = participant;
         this.actions = new ArrayList<>();
     }
+    public Rapport(String auteur, LocalDate dateReunion, String participant) {
+        this.auteur = auteur;
+        this.dateReunion = dateReunion;
+        this.participant = participant;
+        this.actions = new ArrayList<>();
+    }
 
     public void ajouterAction(ActionItem item){
         this.actions.add(item);
