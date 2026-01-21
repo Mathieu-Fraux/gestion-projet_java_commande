@@ -8,7 +8,7 @@ public class Besoin {
     private int id;
     private String description;
     private Etatbesoin etat;
-    // Champs pour l'état "Analysé" 
+    // Champs pour l'état 
     private int chargeJours;        
     private LocalDate dateDebut;
     private LocalDate dateFin;
@@ -48,7 +48,7 @@ public class Besoin {
         this.etat = etat;
     }
 
-
+    
     public String getRaisonAnnulation() {
         return raisonAnnulation;
     }
