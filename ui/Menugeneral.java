@@ -18,9 +18,9 @@ import java.util.List;
 public class Menugeneral {
 
     //acces a la logique metier
-    private logique.LogiqueProjet logique;
+    private LogiqueProjet logique;
 
-    public Menugeneral(logique.LogiqueProjet logique){
+    public Menugeneral(LogiqueProjet logique){
     this.logique=logique;
     }
     // boucle principale
