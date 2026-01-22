@@ -10,23 +10,23 @@ import logique.LogiqueProjet;
 import java.time.LocalDate;
 import java.util.List;
 
-
 /*
  cette classe gére l'affichage des différent menu et tout ce qui est affichée,
  il gére aussi l'appel des fonction pour répondre au action de l'utillisateur
 */
 public class Menugeneral {
 
-    //acces a la logique metier
+    // acces a la logique metier
     private LogiqueProjet logique;
 
-    public Menugeneral(LogiqueProjet logique){
-    this.logique=logique;
+    public Menugeneral(LogiqueProjet logique) {
+        this.logique = logique;
     }
-    // boucle principale
-    public void demarrer(){
 
-        //boucle pour affichage du menue principal
+    // boucle principale
+    public void demarrer() {
+
+        // boucle pour affichage du menue principal
         boolean continuer = true;
         while (continuer) {
             SaisieUtil.afficherTitre("MENU PRINCIPAL AGILE TOOL");
@@ -39,8 +39,8 @@ public class Menugeneral {
 
             switch (choix) {
                 case 1 -> gererBesoins();
-                case 2 -> gererContraintes(); 
-                case 3 -> gererRapports();    
+                case 2 -> gererContraintes();
+                case 3 -> gererRapports();
                 case 0 -> {
                     System.out.println("Au revoir !");
                     continuer = false;
@@ -48,8 +48,9 @@ public class Menugeneral {
                 default -> System.out.println("Choix invalide.");
             }
         }
-        
+
     }
+
     // sous menue : besoin
     private void gererBesoins() {
         // boucle pour le sous menu
@@ -68,16 +69,17 @@ public class Menugeneral {
                 case 1 -> listerBesoins();
                 case 2 -> ajouterBesoin();
                 case 3 -> supprimerBesoin();
-                case 4-> modifierBesoin();
+                case 4 -> modifierBesoin();
                 case 0 -> retour = true;
                 default -> System.out.println("Choix invalide.");
             }
         }
     }
+
     // menu pour afficher les besoins
     private void listerBesoins() {
         List<Besoin> liste = logique.getBesoins();
-        
+
         if (liste.isEmpty()) {
             System.out.println(" Aucun besoin enregistré.");
             return;
@@ -88,34 +90,38 @@ public class Menugeneral {
         System.out.println("----------------------------------------------------------------------");
         System.out.printf("| %-4s | %-30s | %-15s | %-5s |\n", "ID", "Description", "Etat", "Prog.");
         System.out.println("----------------------------------------------------------------------");
-        
+
         for (Besoin besoin : liste) {
-            System.out.printf("| %-4d | %-30s | %-15s | %-4d%% |\n", 
-                    besoin.getId(), 
-                    // on coupe la description si elle est trop longue pour pas casser le tableau( et ne pas penser qu'il y a un bug)
-                    (besoin.getDescription().length() > 28 ? besoin.getDescription().substring(0, 27) + "..." : besoin.getDescription()), 
-                    besoin.getEtat(), 
+            System.out.printf("| %-4d | %-30s | %-15s | %-4d%% |\n",
+                    besoin.getId(),
+                    // on coupe la description si elle est trop longue pour pas casser le tableau(
+                    // et ne pas penser qu'il y a un bug)
+                    (besoin.getDescription().length() > 28 ? besoin.getDescription().substring(0, 27) + "..."
+                            : besoin.getDescription()),
+                    besoin.getEtat(),
                     besoin.getProgression());
         }
         System.out.println("----------------------------------------------------------------------");
     }
+
     private void ajouterBesoin() {
         System.out.println("\n--- Nouveau Besoin ---");
         String desc = SaisieUtil.Lirechaine("Description du besoin");
-        
-        // On demande a la logique de générer un ID 
-        int id = logique.genererProchainIdBesoin(); 
-        
+
+        // On demande a la logique de générer un ID
+        int id = logique.genererProchainIdBesoin();
+
         Besoin nouveau = new Besoin(id, desc);
         logique.ajouterBesoin(nouveau);
-        
+
         System.out.println(" Besoin ajouté avec succès !");
     }
 
     private void supprimerBesoin() {
-        listerBesoins(); // On affiche la liste pour que l'user voie les ID pour pouvoir affectuer son action
+        listerBesoins(); // On affiche la liste pour que l'user voie les ID pour pouvoir affectuer son
+                         // action
         int id = SaisieUtil.lireEntier("ID du besoin à supprimer");
-        
+
         boolean success = logique.supprimerBesoinParId(id);
         if (success) {
             System.out.println(" Besoin " + id + " supprimé.");
@@ -123,6 +129,7 @@ public class Menugeneral {
             System.out.println(" Erreur : ID introuvable.");
         }
     }
+
     private void modifierBesoin() {
         listerBesoins();
         int id = SaisieUtil.lireEntier("ID du besoin à modifier");
@@ -135,61 +142,86 @@ public class Menugeneral {
 
         System.out.println("Modification de : " + besoin.getDescription());
         System.out.println("État actuel : " + besoin.getEtat());
-        
-        // On propose les nouveaux états possibles
-        System.out.println("Choisir le nouvel état :");
-        int i = 1;
-        for (Etatbesoin e : Etatbesoin.values()) {
-            System.out.println(i + ". " + e);
-            i++;
-        }
-        
-        int choixEtat = SaisieUtil.lireEntier("Votre choix");
-        // recuperation l'enum depuis l'index (attention -1 car tableau commence à 0!)
-        if (choixEtat >= 1 && choixEtat <= Etatbesoin.values().length) {
-            Etatbesoin nouvelEtat = Etatbesoin.values()[choixEtat - 1];
-            besoin.setEtat(nouvelEtat);
 
-            // LOGIQUE SPECIFIQUE SELON L'ETAT CHOISI
-            switch (nouvelEtat) {
-                case ANALYSE -> {
-                    System.out.println(" Passage en ANALYSE. Veuillez préciser :");
-                    besoin.setChargeJours(SaisieUtil.lireEntier("Charge (jours/homme)"));
-                    besoin.setResponsable(SaisieUtil.Lirechaine("Responsable"));
-                    besoin.setDateDebut(SaisieUtil.lireDate("Date de début"));
-                    besoin.setDateFin(SaisieUtil.lireDate("Date de fin"));
-                }
-                case ANNULE -> {
-                    System.out.println(" Passage en ANNULE.");
-                    besoin.setRaisonAnnulation(SaisieUtil.Lirechaine("Raison de l'annulation"));
-                }
-                case A_ANALYSER -> {
-                    // On remet éventuellement à zéro si on revient en arrière ( pas forcément utile mais bon)
-                    besoin.setProgression(0);
-                }
-                case TERMINE -> {
-                    besoin.setProgression(100);
-                    System.out.println(" Besoin marqué comme terminé (100%).");
-                }
-            }
-            
-            // modifier la progression si ce n'est pas fini/annulé
-            if (nouvelEtat == Etatbesoin.ANALYSE) {
-                 int prog = SaisieUtil.lireEntier("Mettre à jour la progression (%)");
-                 besoin.setProgression(prog);
+        if (besoin.getEtat() == Etatbesoin.ANALYSE) {
+            System.out.println("\n--- Que voulez-vous modifier ? ---");
+            System.out.println("1. Changer l'état global (Vers Terminé, Annulé...)");
+            System.out.println("2. Mettre à jour la progression (%)");
+            System.out.println("0. revenir en arriére");
+
+            int choixIntermediaire = SaisieUtil.lireEntier("Votre choix");
+            // revenir en arriére
+            if (choixIntermediaire == 0) {
+                System.out.println(" Modification annulée.");
+                return;
             }
 
-            System.out.println("Modification enregistrée !");
-            logique.sauvegarderBesoins();
-        } else {
-            System.out.println("Choix invalide.");
+            // modifier progression
+            if (choixIntermediaire == 2) {
+                int prog = SaisieUtil.lireEntier("Nouvelle progression (0-100)");
+                besoin.setProgression(prog);
+                System.out.println("Progression mise à jour à " + besoin.getProgression() + "%.");
+            }
+
+            // --- OPTION 1 : CHANGER L'ÉTAT ---
+            else if (choixIntermediaire == 1) {
+                // On propose les nouveaux états possibles
+                System.out.println("Choisir le nouvel état :");
+                int i = 1;
+                for (Etatbesoin e : Etatbesoin.values()) {
+                    System.out.println(i + ". " + e);
+                    i++;
+                }
+
+                int choixEtat = SaisieUtil.lireEntier("Votre choix");
+                // recuperation l'enum depuis l'index (attention -1 car tableau commence à 0!)
+                if (choixEtat >= 1 && choixEtat <= Etatbesoin.values().length) {
+                    Etatbesoin nouvelEtat = Etatbesoin.values()[choixEtat - 1];
+                    besoin.setEtat(nouvelEtat);
+
+                    // LOGIQUE SPECIFIQUE SELON L'ETAT CHOISI
+                    switch (nouvelEtat) {
+                        case ANALYSE -> {
+                            System.out.println(" Passage en ANALYSE. Veuillez préciser :");
+                            besoin.setChargeJours(SaisieUtil.lireEntier("Charge (jours/homme)"));
+                            besoin.setResponsable(SaisieUtil.Lirechaine("Responsable"));
+                            besoin.setDateDebut(SaisieUtil.lireDate("Date de début"));
+                            besoin.setDateFin(SaisieUtil.lireDate("Date de fin"));
+                        }
+                        case ANNULE -> {
+                            System.out.println(" Passage en ANNULE.");
+                            besoin.setRaisonAnnulation(SaisieUtil.Lirechaine("Raison de l'annulation"));
+                        }
+                        case A_ANALYSER -> {
+                            // On remet éventuellement à zéro si on revient en arrière ( pas forcément utile
+                            // mais bon)
+                            besoin.setProgression(0);
+                        }
+                        case TERMINE -> {
+                            besoin.setProgression(100);
+                            System.out.println(" Besoin marqué comme terminé (100%).");
+                        }
+                    }
+
+                    // modifier la progression si ce n'est pas fini/annulé
+                    if (nouvelEtat == Etatbesoin.ANALYSE) {
+                        int prog = SaisieUtil.lireEntier("Mettre à jour la progression (%)");
+                        besoin.setProgression(prog);
+                    }
+                }
+
+                System.out.println("Modification enregistrée !");
+                logique.sauvegarderBesoins();
+            } else {
+                System.out.println("Choix invalide.");
+            }
         }
     }
 
-    //======= Msous menu: contrainte=====
+    // ======= Msous menu: contrainte=====
 
     private void gererContraintes() {
-        //affichage menu avec boucle
+        // affichage menu avec boucle
         boolean retour = false;
         while (!retour) {
             SaisieUtil.afficherTitre("GESTION DES CONTRAINTES");
@@ -223,13 +255,16 @@ public class Menugeneral {
         for (Contrainte contrainte : liste) {
             // Petite logique d'affichage pour la colonne "Détail"
             String detail = "";
-            if (contrainte.getEtat() == Etatcontrainte.VERIFIEE) detail = "Par " + contrainte.getVerificateur();
-            if (contrainte.getEtat() == Etatcontrainte.ANNULEE) detail = contrainte.getRaisonAnnulation();
-            
-            System.out.printf("| %-4d | %-30s | %-20s | %-10s |\n", 
-                    contrainte.getId(), 
-                    (contrainte.getDescription().length() > 28 ? contrainte.getDescription().substring(0, 27) + "..." : contrainte.getDescription()),
-                    contrainte.getEtat(), 
+            if (contrainte.getEtat() == Etatcontrainte.VERIFIEE)
+                detail = "Par " + contrainte.getVerificateur();
+            if (contrainte.getEtat() == Etatcontrainte.ANNULEE)
+                detail = contrainte.getRaisonAnnulation();
+
+            System.out.printf("| %-4d | %-30s | %-20s | %-10s |\n",
+                    contrainte.getId(),
+                    (contrainte.getDescription().length() > 28 ? contrainte.getDescription().substring(0, 27) + "..."
+                            : contrainte.getDescription()),
+                    contrainte.getEtat(),
                     detail);
         }
         System.out.println("-----------------------------------------------------------------------------");
@@ -247,7 +282,7 @@ public class Menugeneral {
         listerContraintes();
         int id = SaisieUtil.lireEntier("ID de la contrainte");
         // contrainte est copier-coller de besoins.
-        Contrainte contrainte = logique.trouverContrainteParId(id); 
+        Contrainte contrainte = logique.trouverContrainteParId(id);
 
         if (contrainte == null) {
             System.out.println(">> Introuvable.");
@@ -261,7 +296,7 @@ public class Menugeneral {
             System.out.println(i + ". " + ec);
             i++;
         }
-        
+
         int choix = SaisieUtil.lireEntier("Choix");
         if (choix >= 1 && choix <= Etatcontrainte.values().length) {
             Etatcontrainte nouvelEtat = Etatcontrainte.values()[choix - 1];
@@ -282,10 +317,11 @@ public class Menugeneral {
     private void supprimerContrainte() {
         listerContraintes();
         int id = SaisieUtil.lireEntier("ID à supprimer");
-        if(logique.supprimerContrainteParId(id)) System.out.println(" Supprimé.");
-        else System.out.println("Introuvable.");
+        if (logique.supprimerContrainteParId(id))
+            System.out.println(" Supprimé.");
+        else
+            System.out.println("Introuvable.");
     }
-
 
     // ====== sous menu: rapport=======
     private void gererRapports() {
@@ -317,14 +353,14 @@ public class Menugeneral {
         System.out.println("---------------------------------------------------------");
         System.out.printf("| %-3s | %-12s | %-15s | %-10s |\n", "N°", "Date", "Auteur", "Nb Actions");
         System.out.println("---------------------------------------------------------");
-        
+
         // On utilise un index "i" simple pour choisir le rapport car ils n'ont pas d'ID
         for (int i = 0; i < liste.size(); i++) {
             Rapport rapport = liste.get(i);
-            System.out.printf("| %-3d | %-12s | %-15s | %-10d |\n", 
+            System.out.printf("| %-3d | %-12s | %-15s | %-10d |\n",
                     (i + 1), // On affiche 1 pour le premier élément (index 0)
-                    rapport.getDateReunion(), 
-                    rapport.getAuteur(), 
+                    rapport.getDateReunion(),
+                    rapport.getAuteur(),
                     rapport.getActions().size());
         }
         System.out.println("---------------------------------------------------------");
@@ -348,12 +384,12 @@ public class Menugeneral {
             String quand = SaisieUtil.Lirechaine("Quand (Date échéance texte)");
 
             // On utilise la méthode de la classe Rapport pour ajouter l'item
-            //  objet ActionItem est créé directement ici
+            // objet ActionItem est créé directement ici
             rapport.ajouterAction(new model.ActionItem(quoi, qui, quand));
 
             // On demande si on continue
             String rep = SaisieUtil.Lirechaine("Ajouter une autre action ? (O/N)");
-            //aide pour ignorer si c'est en majuscule ou en minuscule
+            // aide pour ignorer si c'est en majuscule ou en minuscule
             if (rep.equalsIgnoreCase("N")) {
                 ajouterAction = false;
             }
@@ -370,29 +406,27 @@ public class Menugeneral {
 
         if (index >= 0 && index < logique.getRapports().size()) {
             Rapport rapport = logique.getRapports().get(index);
-            
+
             // Affichage Header
             SaisieUtil.afficherTitre("RAPPORT DU " + rapport.getDateReunion());
             System.out.println("Auteur       : " + rapport.getAuteur());
             System.out.println("Participants : " + rapport.getParticipant());
             System.out.println("\nTABLEAU DES ACTIONS :");
-            
+
             // Affichage Tableau Actions
             System.out.println("----------------------------------------------------------------");
             System.out.printf("| %-30s | %-30s | %-12s |\n", "QUOI", "QUI", "QUAND");
             System.out.println("----------------------------------------------------------------");
             for (model.ActionItem item : rapport.getActions()) {
                 // On utilise le toString() de ActionItem ou on formate ici
-                // Comme ActionItem.toString() a déjà le formatage, on peut l'utiliser, 
+                // Comme ActionItem.toString() a déjà le formatage, on peut l'utiliser,
                 // mais attention il ajoute déjà les '|'.
                 System.out.println(item.toString());
             }
             System.out.println("----------------------------------------------------------------");
-            
+
         } else {
             System.out.println(" Numéro invalide.");
         }
     }
 }
-
-
