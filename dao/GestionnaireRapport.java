@@ -9,13 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GestionnaireRapport {
-
+    private static final String DOSSIER = "data";
     private static final String FICHIER_INDEX = "data/rapports_index.csv";
-    private static final String FICHIER_RAPPORT = "data/rapport";
+    private static final String DOSSIER_RAPPORTS = "data/rapport";
     private static final String SEPARATEUR_TECHNIQUE = "---START_ACTIONS_DATA !!Ne pas toucher!!---";
 
     // sauvegarde du fichier Index
     public void sauvegarder(List<Rapport> liste) {
+        File dossierData = new File(DOSSIER);
+        if (!dossierData.exists()) {
+            dossierData.mkdirs();
+        }
         // On sauvegarde l'index
         try (PrintWriter writer = new PrintWriter(new FileWriter(FICHIER_INDEX))) {
             for (Rapport r : liste) {
@@ -37,9 +41,10 @@ public class GestionnaireRapport {
 
     // sauvegarde d'un fichier texte pour le rapport
     private void sauvegarderDetails(Rapport r, String nomFichierSimple) {
-        File dossierRapport = new File(FICHIER_RAPPORT);
-        if (!dossierRapport.exists())
+        File dossierRapport = new File(DOSSIER_RAPPORTS);
+        if (!dossierRapport.exists()) {
             dossierRapport.mkdirs();
+        }
 
         File fichierComplet = new File(dossierRapport, nomFichierSimple);
 
@@ -108,7 +113,7 @@ public class GestionnaireRapport {
 
     // chargement des fichier textes
     private void chargerDetails(Rapport r, String nomFichierSimple) {
-        File file = new File(FICHIER_RAPPORT, nomFichierSimple);
+        File file = new File(DOSSIER_RAPPORTS, nomFichierSimple);
         if (!file.exists()) {
             System.out.println("AVERTISSEMENT : Le fichier détail " + nomFichierSimple + " est introuvable.");
             return;

@@ -9,10 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GestionnaireBesoin {
+    private static final String DOSSIER = "data";
     private static final String FICHIER = "data/besoins.csv";
-    
+
     //sauvegarder la liste dans fichier
     public void sauvegarder(List<Besoin> liste) {
+        File dossierData = new File(DOSSIER);
+        if (!dossierData.exists()) {
+            dossierData.mkdirs();
+        }
         // try  permet de fermer le fichier automatiquement à la fin
         try (PrintWriter writer = new PrintWriter(new FileWriter(FICHIER))) {
             for (Besoin besoin : liste) {

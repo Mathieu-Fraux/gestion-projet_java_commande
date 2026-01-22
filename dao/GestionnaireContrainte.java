@@ -10,9 +10,16 @@ import java.util.List;
 
 /*voir dao besoin pour explication */
 public class GestionnaireContrainte {
+    private static final String DOSSIER = "data";
     private static final String FICHIER = "data/contraintes.csv";
 
     public void sauvegarder(List<Contrainte> liste) {
+
+        File dossierData = new File(DOSSIER);
+        if (!dossierData.exists()) {
+            dossierData.mkdirs();
+        }
+        
         try (PrintWriter writer = new PrintWriter(new FileWriter(FICHIER))) {
             for (Contrainte c : liste) {
                 String ligne = c.getId() + ";"
