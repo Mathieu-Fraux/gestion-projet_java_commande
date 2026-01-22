@@ -5,5 +5,4 @@ public enum Etatbesoin {
     ANALYSE,
     ANNULE,
     TERMINE
-
 }

@@ -71,8 +71,5 @@ public class Contrainte {
 
     public void setDateVerification(LocalDate dateVerification) {
         this.dateVerification = dateVerification;
-    }
-
-    
-    
+    }  
 }

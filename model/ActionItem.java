@@ -38,6 +38,6 @@ public class ActionItem {
     }
     // format pour afficher correctement avec les % pour les alignement correct
     public String toString() {
-        return String.format("| %-30s | %-15s | %-12s |", tache, responsable, dateEcheance);
+        return String.format("| %-30s | %-30s | %-12s |", tache, responsable, dateEcheance);
     }
 }

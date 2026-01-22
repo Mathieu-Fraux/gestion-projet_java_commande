@@ -8,15 +8,16 @@ import model.Rapport;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/* 
+    Cette partie fait la gestion mémoire pour garder les fichier en mémoire
+    et ne pa avoir a les relire a chaque fois que l'on cherche quelque chose.
+*/
 public class LogiqueProjet {
 
     // recuperation des donnée
-
     private List<Besoin> besoins;
     private List<Contrainte> contraintes;
     private List<Rapport> rapports;
-
 
     public LogiqueProjet() {
         // On initialise les listes vides au démarrage de l'app
@@ -54,16 +55,13 @@ public class LogiqueProjet {
     }
 
     //====== Gestion contrainte=====
-
-    //a jouter contrainte
+    //ajouter contrainte
     public void ajouterContrainte(Contrainte contrainte) {
         contraintes.add(contrainte);
     }
-
     public List<Contrainte> getContraintes() {
         return contraintes;
     }
-
     public boolean supprimerContrainteParId(int id) {
         return contraintes.removeIf(c -> c.getId() == id);
     }
@@ -82,7 +80,6 @@ public class LogiqueProjet {
     public void ajouterRapport(Rapport rapport) {
         rapports.add(rapport);
     }
-
     public List<Rapport> getRapports() {
         return rapports;
     }
@@ -101,6 +98,4 @@ public class LogiqueProjet {
             return 1;}
         return contraintes.get(contraintes.size() - 1).getId() + 1;
     }
-
-
 }

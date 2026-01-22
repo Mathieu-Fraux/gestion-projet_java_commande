@@ -14,9 +14,9 @@ public class SaisieUtil {
 
     // afficher le titre en majuscule et proprement
     public static void afficherTitre(String titre) {
-        System.out.println("\n=================================");
+        System.out.println("\n" + "=".repeat(40));
         System.out.println("  " + titre.toUpperCase());
-        System.out.println("=================================");
+        System.out.println("=".repeat(40));
     }
 
 
