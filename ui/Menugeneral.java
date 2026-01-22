@@ -180,6 +180,7 @@ public class Menugeneral {
             }
 
             System.out.println("Modification enregistrée !");
+            logique.sauvegarderBesoins();
         } else {
             System.out.println("Choix invalide.");
         }
@@ -274,6 +275,7 @@ public class Menugeneral {
                 contrainte.setRaisonAnnulation(SaisieUtil.Lirechaine("Raison annulation"));
             }
             System.out.println("Contrainte mise à jour.");
+            logique.sauvegarderContraintes();
         }
     }
 

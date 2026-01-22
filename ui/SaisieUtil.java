@@ -3,7 +3,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
-
+/*
+cette class permet de gesrer la saisie de l'utilisateur et eviter les conflit de scanner 
+en le mettant a un seul endroit
+*/
 public class SaisieUtil {
     // Scanner unique pour toute l'application (évite les conflits)
     private static final Scanner scanner = new Scanner(System.in);
@@ -62,7 +65,4 @@ public class SaisieUtil {
         }
         return date;
     }
-
-
-
 }
